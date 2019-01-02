@@ -1,0 +1,118 @@
+{% load static %}
+<html>
+   <head>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" >
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+      <div class="topo" style="background-color:rgb(128,128,128); text-align:center;">
+         <br><br>
+         <h1>Shop Official Twitch Streamer T-Shirts & Apparel</h1>
+         <br><br>
+      </div>
+   </head>
+   <body style="background-color:rgb(190,185,183);">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+         <a class="navbar-brand" href="{% url 'store:index' %}">Your online shop!!</a>
+         <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" id="menu1" type="button" data-toggle="dropdown">Categories
+            <span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+               {% if category_list %}
+               {% for category in category_list %}
+               <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'store:category' category.slug %}">{{ category.name }}</a></li>
+               {% endfor %}
+               {% else %}
+               <p>No category is available.</p>
+               {% endif %}
+            </ul>
+         </div>
+         <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" id="menu1" type="button" data-toggle="dropdown">Streamers
+            <span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+               {% if streamer_list %}
+               {% for streamer in streamer_list %}
+               <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'store:streamer' streamer.slug %}">{{ streamer.name }}</a></li>
+               {% endfor %}
+               {% else %}
+               <p>No category is available.</p>
+               {% endif %}
+            </ul>
+         </div>
+         <div class="pull-right">
+            {% block content %}
+            {% if user.is_authenticated %}
+            Hi {{ user.username }}!
+            <a href="{% url 'store:logout' %}"><button class="btn btn-warning">Logout!</button></a>
+            {% else %}
+            <a>You are not logged in!!!</a>
+            <a href="{% url 'store:login' %}"><button class="btn btn-success">Login</button></a>
+            <a href="{% url 'store:register' %}"><button class="btn btn-info">Register</button></a>
+            {% endif %}
+            {% endblock %}
+         </div>
+         <a href="{% url 'store:cart' %}"><button style="font-size:16px" class="btn btn-primary">Shopping cart <i class="fa fa-shopping-cart" style="font-size:24px"></i></button></a>
+         <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" id="menu1" type="button" data-toggle="dropdown">My Account
+            <span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+               <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'store:profile' %}">Profile</a></li>
+               <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'store:my_orders' %}">Orders</a></li>
+            </ul>
+         </div>
+      </nav>
+      {% if order_list %}
+      <div class="form-row text-center">
+         <div class="col-2">
+            <button class="btn btn-primary">Order ID</button>
+         </div>
+         <div class="col-2">
+            <button class="btn btn-primary">Billing Address</button>
+         </div>
+         <div class="col-2">
+            <button class="btn btn-primary">Delivery Address </button>
+         </div>
+         <div class="col-2">
+            <button class="btn btn-primary">Status</button>
+         </div>
+        <div class="col-2">
+            <button class="btn btn-primary">Order total</button>
+         </div>
+         <div class="col-2">
+            <button class="btn btn-primary">Created At</button>
+         </div>
+      </div>
+      </div>
+      {% for order in order_list %}
+      <div class="form-row text-center">
+         <div class="col-2">
+            <a role="menuitem" tabindex="-1" href="{% url 'store:my_order_products' order.id %}">{{ order.id }}</a>
+         </div>
+         <div class="col-2">
+            {{ order.billing_address }}
+         </div>
+         <div class="col-2">
+            {{ order.delivery_address }}
+         </div>
+         <div class="col-2">
+            {{ order.status }}
+         </div>
+        <div class="col-2">
+            {{ order.price }}
+         </div>
+         <div class="col-2">
+            {{ order.created_at }}
+         </div>
+      </div>
+      <svg height="10" width="1500">
+         <line x1="0" x2="1500" style="stroke:rgb(0,0,0);stroke-width:2" />
+         Sorry, your browser does not support inline SVG.
+      </svg>
+      {% endfor %}
+      {% else %}
+      <p>No order is available.</p>
+      {% endif %}
+   </body>
+</html>
+

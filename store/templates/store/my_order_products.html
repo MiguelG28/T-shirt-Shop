@@ -1,0 +1,79 @@
+{% load static %}
+<html>
+   <head>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+      <div class="topo" style="background-color:rgb(128,128,128);">
+         <br><br>
+         <h1>Your online shop!!</h1>
+         <br><br>
+      </div>
+   </head>
+   <body  style="background-color:rgb(190,185,183);">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+         <a class="navbar-brand" href="{% url 'store:index' %}">Your online shop!!</a>
+         <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" id="menu1" type="button" data-toggle="dropdown">Categories
+            <span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+               {% if category_list %}
+               {% for category in category_list %}
+               <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'store:category' category.slug %}">{{ category.name }}</a></li>
+               {% endfor %}
+               {% else %}
+               <p>No category is available.</p>
+               {% endif %}
+            </ul>
+         </div>
+         <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" id="menu1" type="button" data-toggle="dropdown">Streamers
+            <span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+               {% if streamer_list %}
+               {% for streamer in streamer_list %}
+               <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'store:streamer' streamer.slug %}">{{ streamer.name }}</a></li>
+               {% endfor %}
+               {% else %}
+               <p>No category is available.</p>
+               {% endif %}
+            </ul>
+         </div>
+         <div class="pull-right">
+            {% block content %}
+            {% if user.is_authenticated %}
+            Hi {{ user.username }}!
+            <a href="{% url 'store:logout' %}"><button class="btn btn-warning">Logout!</button></a>
+            {% else %}
+            <a>You are not logged in!!!</a>
+            <a href="{% url 'store:login' %}"><button class="btn btn-success">Login</button></a>
+            <a href="{% url 'store:register' %}"><button class="btn btn-info">Register</button></a>
+            {% endif %}
+            {% endblock %}
+         </div>
+         <a href="{% url 'store:cart' %}"><button style="font-size:24px" class="btn btn-primary">Shopping cart <i class="fa fa-shopping-cart" style="font-size:24px"></i></button></a>
+         <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" id="menu1" type="button" data-toggle="dropdown">My Account
+            <span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+               <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'store:profile' %}">Profile</a></li>
+               <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'store:my_orders' %}">Orders</a></li>
+            </ul>
+         </div>
+      </nav>
+      <h3>Order id: {{ order_products.id}}</h3>
+      {% for product in order_products.orderProduct.all %}
+      <div class="col-6" >
+         <h5>Size: {{ product.size }}</h5>
+         <h5>Color: {{ product.color }}</h5>
+         <h5>Price: {{ product.price }}€</h5>
+         <h5>Quantity: {{ product.quantity }}</h5>
+      </div>
+      <div class="col-6" style="display:inline;">
+         <img src="{% get_media_prefix %}{{ product.img }}" class="rounded mx-auto d-block" width="200" height="200">
+      </div>
+      {% endfor %}
+   </body>
+</html>
+
+

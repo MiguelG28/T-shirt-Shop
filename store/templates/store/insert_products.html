@@ -1,0 +1,74 @@
+ {% load static %}
+<html>
+   <head>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+      <div class="topo" style="background-color:rgb(128,128,128); text-align:center;">
+         <br><br>
+         <h1>Shop Official Twitch Streamer T-Shirts & Apparel</h1>
+         <br><br>
+      </div>
+   </head>
+   <body style="background-color:rgb(190,185,183);">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+         <a class="navbar-brand" href="{% url 'store:index' %}">Your online shop!!</a>
+         <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" id="menu1" type="button" data-toggle="dropdown">Categories
+            <span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+               {% if category_list %}
+               {% for category in category_list %}
+               <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'store:category' category.slug %}">{{ category.name }}</a></li>
+               {% endfor %}
+               {% else %}
+               <p>No category is available.</p>
+               {% endif %}
+            </ul>
+         </div>
+         <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" id="menu1" type="button" data-toggle="dropdown">Streamers
+            <span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+               {% if streamer_list %}
+               {% for streamer in streamer_list %}
+               <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'store:streamer' streamer.slug %}">{{ streamer.name }}</a></li>
+               {% endfor %}
+               {% else %}
+               <p>No category is available.</p>
+               {% endif %}
+            </ul>
+         </div>
+         <div class="pull-right">
+            {% block content %}
+            {% if user.is_authenticated %}
+            Hi {{ user.username }}!
+            <a href="{% url 'store:logout' %}"><button class="btn btn-warning">Logout!</button></a>
+            {% else %}
+            <a>You are not logged in!!!</a>
+            <a href="{% url 'store:login' %}"><button class="btn btn-success">Login</button></a>
+            <a href="{% url 'store:register' %}"><button class="btn btn-info">Register</button></a>
+            {% endif %}
+            {% endblock %}
+         </div>
+         <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" id="menu1" type="button" data-toggle="dropdown">My Account
+            <span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+               <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'store:profile' %}">Profile</a></li>
+               <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'store:my_orders' %}">Orders</a></li>
+            </ul>
+         </div>
+      </nav>
+      <h2>Insert product information:</h2>
+      {% block content_3 %}
+      {% if user.is_authenticated %}
+      <form enctype="multipart/form-data" method="post">
+         {% csrf_token %}
+         {{ form.as_p }}
+         <button type="submit" class="btn btn-success">Insert data!</button>
+      </form>
+      {% endif %}
+      {% endblock %}
+   </body>
+</html>
